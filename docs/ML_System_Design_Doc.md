@@ -17,7 +17,7 @@
   - Снижение жалоб на модерацию на 50%.
   - Отсутствие критических ошибок в работе системы.
   - Модель бизнес процессов до разработки [см.](https://github.com/fearandloath1ng/system_design_project/blob/main/diagrams/bpmn_before.png)
-  - Модель бизнес процессов после разработки [см.](https://github.com/fearandloath1ng/system_design_project/blob/main/diagrams/architecture.png)
+  - Модель бизнес процессов после разработки [см.](https://github.com/fearandloath1ng/system_design_project/blob/main/diagrams/bpmn_after.png)
  
 #### 1.2. Бизнес-требования и ограничения  
 
