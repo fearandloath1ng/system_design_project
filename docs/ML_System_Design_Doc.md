@@ -190,3 +190,77 @@
   - Ограничение по latency (≤ 100 мс).
 
 ### 4. Внедрение
+
+
+#### 4.1. Архитектура решения 
+
+- **Блок-схема** [см.](https://github.com/fearandloath1ng/system_design_project/blob/main/diagrams/architecture.png):
+  - **API Gateway**: Принимает комментарии.
+  - **Preprocessing Service**: Очистка и токенизация.
+  - **ML Model Service**: Классификация (RuBERT).
+  - **Database**: PostgreSQL (результаты) + S3 (логи).
+  - **Notification Service**: Уведомления модераторам.
+  - **Dashboard**: React + Tailwind CSS.
+- **Методы API**:
+  - POST /comments: отправка комментария на классификацию.
+  - GET /reports: получение отчета по тональности.
+- **ER-диаграмма решения** [см.](https://github.com/fearandloath1ng/system_design_project/blob/main/diagrams/er_diagram.png).
+- **Поведенческая UML-диаграмма** [см.](https://github.com/fearandloath1ng/system_design_project/blob/main/diagrams/uml_sequence.png).
+
+#### 4.2. Описание инфраструктуры и масштабируемости
+
+- **Инфраструктура**: AWS (EC2, RDS, S3, SageMaker).
+- **Почему выбрана**:
+  - Эластичность: Auto Scaling для пиковых нагрузок.
+  - Надежность: RDS и S3 с высокой доступностью.
+- **Плюсы**:
+  - Гибкость в масштабировании.
+  - Поддержка GPU.
+- **Минусы**:
+  - Зависимость от AWS.
+- **Альтернативы**: GCP, Azure (отклонены из-за меньшей гибкости в настройке GPU).
+
+#### 4.3. Требования к работе системы 
+
+- **SLA**: 99.9% доступности.
+- **RPS**: 6 000 запросов/сек.
+- **Latency**: ≤ 100 мс на комментарий.
+
+#### 4.4. Безопасность системы
+
+- **Уязвимости**:
+  - Атаки на API (DDoS).
+    - **Решение**: AWS WAF.
+- **Риски**:
+  - Утечка данных.
+    - **Решение**: Шифрование данных (AWS KMS).
+
+#### 4.5. Безопасность данных 
+
+- Анонимизация данных пользователей.
+- Соответствие GDPR и российскому законодательству.
+
+#### 4.6. Издержки 
+
+- **Оценка**:
+  - EC2 (t3.medium): ~$30/мес.
+  - SageMaker (ml.g4dn.xlarge): ~$500/мес.
+  - RDS (db.t3.medium): ~$100/мес.
+  - S3: ~$50/мес.
+  - Итого: ~$680/мес.
+
+#### 4.7. Integration points
+
+- **API Gateway → Preprocessing**: REST POST /preprocess.
+- **Preprocessing → ML Model**: REST POST /predict.
+- **ML Model → Database**: SQL INSERT.
+- **Database → Dashboard**: REST GET /reports.
+
+#### 4.8. Риски 
+
+- **Сбой инфраструктуры**:
+  - **Решение**: Мультизональное развертывание.
+- **Устаревание модели**:
+  - **Решение**: Дообучение раз в квартал.
+- **Юридические ограничения**:
+  - **Решение**: Анонимизация данных.
